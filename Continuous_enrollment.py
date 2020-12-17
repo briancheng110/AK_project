@@ -1,7 +1,7 @@
 from sfi import Data
 from sfi import Macro
 
-# First we get the coverage gap variable from stata
+# First we get pull in the coverage gap variable from stata
 MAX_ENRL_GAP = int(Macro.getLocal("MAX_COVERAGE_GAP"))
 
 # We want to run the entire observation space
