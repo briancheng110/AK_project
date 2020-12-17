@@ -9,12 +9,17 @@ OUTPUT	AK_COUNT_PROC					|
 
 * Environment header
 include "/project/etzkorn_MMSutilization/brian/AK_files/Do files/ENV_HEADER.doh"
+
+if ("`LEAD_IN_CUTOFF'" == "") {
+	local LEAD_IN_CUTOFF = 0 // Use unlimited look back by default
+}
 *---------------------------------------------------------------
 
 * Original file has 1 entry per claim ID
 * Need to only include AKs that are _prior_ to the TX_DATE
 
 * We use claim IDs to match the AK code with a destruction event. Must be on the same clmid to count
+* Use a fusion patid + clmid key
 use pt_clm using "`AK_DESTR_RAW'", clear
 duplicates drop
 save Intermediates/AK_destr_clmids, replace
@@ -34,7 +39,15 @@ merge m:1 patid using `MPL', keepus(TX_DATE)
 keep if _merge == 3 | _merge == 2
 
 * Because _merge 2 records are incomplete. This will cause all 2 records to drop
+* Want to only look at data in the lead in period
+* Generate time range to count SCCs
 drop if fst_dt > TX_DATE & _merge == 3
+
+* Only do this if a cutoff is specified
+if (`LEAD_IN_CUTOFF' > 0) {
+	gen LEAD_IN_START = TX_DATE - `LEAD_IN_CUTOFF'
+	drop if fst_dt < LEAD_IN_START & _merge == 3
+}
 
 * Count instances of AK, after we drop AKs occuring after TX_DATE
 sort patid TX_DATE

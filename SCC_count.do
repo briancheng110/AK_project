@@ -9,6 +9,10 @@ OUTPUT	SCC_COUNT_PROC					|
 
 * Environment header
 include "/project/etzkorn_MMSutilization/brian/AK_files/Do files/ENV_HEADER.doh"
+
+if ("`LEAD_IN_CUTOFF'" == "") {
+	local LEAD_IN_CUTOFF = 0 // Use unlimited look back by default
+}
 *---------------------------------------------------------------
 
 * We use claim IDs to match the SCC code with a surgery event. Must be on the same clmid to count
@@ -32,7 +36,15 @@ merge m:1 patid using `MPL', keepus(TX_DATE)
 keep if _merge == 3 | _merge == 2
 
 * Because _merge 2 records are incomplete. This will cause all 2 records to drop
+* Want to only look at data in the lead in period
+* Generate time range to count SCCs
 drop if fst_dt > TX_DATE & _merge == 3
+
+* Only do this if a cutoff is specified
+if (`LEAD_IN_CUTOFF' > 0) {
+	gen LEAD_IN_START = TX_DATE - `LEAD_IN_CUTOFF'
+	drop if fst_dt < LEAD_IN_START & _merge == 3
+}
 
 * Count instances of AK, after we drop AKs occuring after TX_DATE
 sort patid TX_DATE

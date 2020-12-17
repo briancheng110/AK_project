@@ -22,7 +22,6 @@ if ("`MAX_COVERAGE_GAP'" == "") {
 
 *---------------------------------------------------------------
 
-
 if (`SKIP_OPTUM_PULL' == 0) {
 	use "`OPTUM_DIR'/ses_mbr_detail", clear
 	tostring patid, replace format(%19.0f)
@@ -80,9 +79,12 @@ keep patid C_START C_END TX_DATE
 
 
 * Calculate lead-in and f/u periods
-gen LEAD_IN = TX_DATE - C_START
-gen FOLLOW_UP = C_END - TX_DATE
+gen C_LEAD_IN = TX_DATE - C_START
+gen C_FOLLOW_UP = C_END - TX_DATE
 gen RANGE = LEAD_IN + FOLLOW_UP
+
+* Drop continuous start/end ranges
+drop C_START C_END
 
 * And we're done!
 save `ENRL_TIMES', replace
