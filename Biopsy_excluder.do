@@ -32,6 +32,8 @@ keep if _merge == 3
 * Calculate cutoff date range
 gen CUTOFF_DATE = TX_DATE - `NO_BIOPSY_RANGE'
 keep if fst_dt >= CUTOFF_DATE & fst_dt <= TX_DATE
+
+* Clean up and save
 keep patid
 duplicates drop
-save `BX_PROC', replace
+save "`BX_PROC'", replace

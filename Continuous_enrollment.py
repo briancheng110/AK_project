@@ -33,6 +33,7 @@ for OBS in range(Data.getObsTotal()):
 		PREV_END = Data.get("eligend"+str(ENRL_PERIOD-1), OBS, "", False, 0)[0][0]
 		ENRL_GAP = CURRENT_EFF - PREV_END
 
+		# If ENRL_GAP is over our threshold, means next period is too far away. Write our current eligeff to C_START
 		if ENRL_GAP > MAX_ENRL_GAP:
 			Data.storeAt("C_START", OBS, CURRENT_EFF)
 			break
@@ -60,7 +61,7 @@ for OBS in range(Data.getObsTotal()):
 		CURRENT_END = Data.get("eligend"+str(START_INDEX), OBS, "", False, 0)[0][0]
 		Data.storeAt("C_END", OBS, CURRENT_END)
 	
-
+	# Start working forwards
 	CURRENT_END = Data.get("eligend"+str(START_INDEX), OBS, "", False, 0)[0][0]	
 	for ENRL_PERIOD in range(START_INDEX, PLAN_COUNT, 1):
 		NEXT_START = Data.get("eligeff"+str(ENRL_PERIOD+1), OBS, "", False, 0)[0][0]
