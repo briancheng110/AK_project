@@ -14,7 +14,11 @@ local PY_SCRIPT = "`DO_FILES'/Continuous_enrollment.py"
 
 * Program options
 local SKIP_OPTUM_PULL = 1
-local MAX_COVERAGE_GAP = 1
+
+* Check if this is set. Set = we got called by another program
+if ("`MAX_COVERAGE_GAP'" == "") {
+	local MAX_COVERAGE_GAP = 5
+}
 
 *---------------------------------------------------------------
 
@@ -24,7 +28,6 @@ if (`SKIP_OPTUM_PULL' == 0) {
 	tostring patid, replace format(%19.0f)
 
 	* This is pre-filter to thin out the files.
-	* I need to tostring(pat_planid) after this, but it's very slow to tostring the whole dataset, then drop them
 	merge m:1 patid using `MPL', keepus(patid)
 
 	* Keep our patients only

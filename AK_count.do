@@ -15,7 +15,6 @@ include "/project/etzkorn_MMSutilization/brian/AK_files/Do files/ENV_HEADER.doh"
 * Need to only include AKs that are _prior_ to the TX_DATE
 
 * We use claim IDs to match the AK code with a destruction event. Must be on the same clmid to count
-* Looks like claim IDs are not unique. Need to use a patid + clmid fusion key
 use pt_clm using "`AK_DESTR_RAW'", clear
 duplicates drop
 save Intermediates/AK_destr_clmids, replace
