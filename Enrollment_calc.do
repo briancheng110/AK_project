@@ -9,7 +9,8 @@ OUTPUT	ENRL_TIMES					|
 
 * Environment header
 include "/project/etzkorn_MMSutilization/brian/AK_files/Do files/ENV_HEADER.doh"
-local PY_SCRIPT = "`DO_FILES'/Continuous_enrollment.py"
+local ContEnrl_PyScript = "`DO_FILES'/Continuous_enrollment.py"
+local CumEnrl_PyScript = "`DO_FILES'/Cumulative_enrollment.py"
 
 
 * Program options
@@ -67,11 +68,19 @@ reshape wide eligeff eligend  START, i(patid) j(seq)
 
 gen C_START = .
 gen C_END = .
+gen C_LEAD_IN = .
 
+
+python
+from sfi import Macro
+execfile(Macro.getLocal("CumEnrl_PyScript"))
+end
+
+/*
 * We have a python program to take care of the crazy continuous enrollment logic
 python
 from sfi import Macro
-execfile(Macro.getLocal("PY_SCRIPT"))
+execfile(Macro.getLocal("ContEnrl_PyScript"))
 end
 
 * Once that finishes, we'll have date range for the longest continuous enrollment period for each patid
