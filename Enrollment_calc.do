@@ -45,10 +45,10 @@ if (`SKIP_OPTUM_PULL' == 0) {
 	keep if _merge == 3
 	drop _merge
 
-	save Intermediates/tmp,replace
+	save "`RAW_DATA'/Pt_demographics", replace
 }
 
-use Intermediates/tmp,clear
+use "`RAW_DATA'/Pt_demographics",clear
 
 sort patid eligeff
 keep patid eligeff eligend TX_DATE
@@ -68,15 +68,14 @@ reshape wide eligeff eligend  START, i(patid) j(seq)
 
 gen C_START = .
 gen C_END = .
-gen C_LEAD_IN = .
+gen CM_LEAD_IN = .
 
-
+* We have a python program to count cumulative enrollment time
 python
 from sfi import Macro
 execfile(Macro.getLocal("CumEnrl_PyScript"))
 end
 
-/*
 * We have a python program to take care of the crazy continuous enrollment logic
 python
 from sfi import Macro
@@ -84,20 +83,21 @@ execfile(Macro.getLocal("ContEnrl_PyScript"))
 end
 
 * Once that finishes, we'll have date range for the longest continuous enrollment period for each patid
-keep patid C_START C_END TX_DATE
+keep patid C_START C_END TX_DATE CM_LEAD_IN
 
 
 * Calculate lead-in and f/u periods
 gen C_LEAD_IN = TX_DATE - C_START
 gen C_FOLLOW_UP = C_END - TX_DATE
-gen RANGE = LEAD_IN + FOLLOW_UP
+gen RANGE = C_LEAD_IN + C_FOLLOW_UP
 
 * Drop continuous start/end ranges
 drop C_START C_END
 
+* Rename variables to be prettier
+ren CM_LEAD_IN LeadIn
+ren C_LEAD_IN PriorEnrl
+ren C_FOLLOW_UP FollowUp_Enrl
+
 * And we're done!
 save `ENRL_TIMES', replace
-
-/*
-
-keep patid LEAD_IN FOLLOW_UP

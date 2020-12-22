@@ -1,10 +1,8 @@
-python
 from sfi import Data
 from sfi import Macro
 
 # We want to run the entire observation space
-#for OBS in range(Data.getObsTotal()):
-for OBS in range(0,1,1):
+for OBS in range(Data.getObsTotal()):
 
 	# Stata provides data called from Data.get as a list. [0][0] is to remove the list part
 
@@ -22,7 +20,7 @@ for OBS in range(0,1,1):
 		CURRENT_EFF = Data.get("eligeff1", OBS, "", False, 0)[0][0]
 		ENRL_DAYS = TX_DATE - CURRENT_EFF
 		
-		Data.storeAt("C_LEAD_IN", OBS, ENRL_DAYS)
+		Data.storeAt("CM_LEAD_IN", OBS, ENRL_DAYS)
 		continue
 		
 	# Work backwards
@@ -47,14 +45,14 @@ for OBS in range(0,1,1):
 
 		# Means we're on the starting period 
 		if (ENRL_PERIOD == START_INDEX):
-			Data.storeAt("C_LEAD_IN", OBS, TX_DATE - CURRENT_EFF)
+			Data.storeAt("CM_LEAD_IN", OBS, TX_DATE - CURRENT_EFF)
 			continue
 
-		current_lead_in = Data.get("C_LEAD_IN", OBS, "", False, 0)[0][0]
-		Data.storeAt("C_LEAD_IN", OBS, current_lead_in + (CURRENT_END - CURRENT_EFF))
+		current_lead_in = Data.get("CM_LEAD_IN", OBS, "", False, 0)[0][0]
+		Data.storeAt("CM_LEAD_IN", OBS, current_lead_in + (CURRENT_END - CURRENT_EFF))
 	
 	# We want the number of enrollment periods each patient had
 	PLAN_COUNT = int(Data.get("PLAN_COUNT", OBS, "", False, 0)[0][0])
-end
+
 
 	

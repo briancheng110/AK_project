@@ -18,7 +18,7 @@ foreach YEAR of numlist `YR_START'/`YR_END'{
         capture use `OPTUM_DIR'/ses_`OPTUM_FILE_TYPE'`YEAR'`QUARTER', clear
 	if (_rc != 0) continue, break
 	
-	keep if regexm(proc_cd, "^116[024][0-6]")
+	keep if regexm(proc_cd, "^116[024][012346]")
         keep `PROC_FIELDS'
 	tostring patid, replace format(%19.0f)
 	gen pt_clm = patid + clmid
