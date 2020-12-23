@@ -18,6 +18,7 @@ foreach YEAR of numlist `YR_START'/`YR_END'{
         capture use `OPTUM_DIR'/ses_`OPTUM_FILE_TYPE'`YEAR'`QUARTER', clear
 	if (_rc != 0) continue, break
 	
+	* Flag and drop strat here. Preserves reason for exclusion, and we don't have to run check twice
 	gen ExclReason = ""
 	if (icd_flag[1] == "9") {
 		replace ExclReason = "Porphyria" if diag == "2771"
@@ -25,7 +26,7 @@ foreach YEAR of numlist `YR_START'/`YR_END'{
 	} 
 	if (icd_flag[1] == "10") {
 		replace ExclReason = "Porphyria" if regexm(diag, "^E80[012]*")
-		replace ExclReason = "Pregnancy" if regexm(diag, "^O09[0-9aA]") | regexm(diag, "^Z34[089][0123]"
+		replace ExclReason = "Pregnancy" if regexm(diag, "^O09[0-9aA]") | regexm(diag, "^Z34[089][0123]")
 	}
 	drop if ExclReason == ""
 	tostring patid, replace format(%19.0f)
