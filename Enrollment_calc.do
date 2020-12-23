@@ -95,7 +95,7 @@ gen RANGE = C_LEAD_IN + C_FOLLOW_UP
 drop C_START C_END
 
 * Rename variables to be prettier
-ren CM_LEAD_IN LeadIn
+ren CM_LEAD_IN Cml_LeadIn
 ren C_LEAD_IN PriorEnrl
 ren C_FOLLOW_UP FollowUp_Enrl
 

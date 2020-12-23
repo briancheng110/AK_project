@@ -30,9 +30,6 @@ local ENRL_TIMES = "`APPEND_DIR'/Enrollment_times"
 local FIRST_SCC = "`APPEND_DIR'/First_SCC"
 
 
-local PROC_FIELDS = "patid pat_planid clmid std_cost std_cost_yr charge proc_cd provcat prov_par fst_dt copay deduct prov provcat"
-local DX_FIELDS = "patid pat_planid clmid diag fst_dt"
-
 * Keep all RX fields.
 *local RX_FIELDS = "patid pat_planid clmid fst_dt"
 

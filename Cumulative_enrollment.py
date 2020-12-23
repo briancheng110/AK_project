@@ -54,5 +54,3 @@ for OBS in range(Data.getObsTotal()):
 	# We want the number of enrollment periods each patient had
 	PLAN_COUNT = int(Data.get("PLAN_COUNT", OBS, "", False, 0)[0][0])
 
-
-	
