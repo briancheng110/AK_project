@@ -19,7 +19,6 @@ foreach YEAR of numlist `YR_START'/`YR_END'{
 	if (_rc != 0) continue, break
 	
 	keep if regexm(proc_cd, "1110[0246]")
-        keep `PROC_FIELDS'
 	tostring patid, replace format(%19.0f)
 	gen pt_clm = patid + clmid
         save Intermediates/`OPTUM_FILE_TYPE'`YEAR'`QUARTER'.dta, replace

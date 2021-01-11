@@ -25,7 +25,7 @@ foreach YEAR of numlist `YR_START'/`YR_END'{
 		replace ExclReason = "Pregnancy" if regexm(diag, "^V2[23]")		
 	} 
 	if (icd_flag[1] == "10") {
-		replace ExclReason = "Porphyria" if regexm(diag, "^E80[012]*")
+		replace ExclReason = "Porphyria" if regexm(diag, "^E80[012]")
 		replace ExclReason = "Pregnancy" if regexm(diag, "^O09[0-9aA]") | regexm(diag, "^Z34[089][0123]")
 	}
 	drop if ExclReason == ""
